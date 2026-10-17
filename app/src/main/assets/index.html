@@ -1,0 +1,108 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1"><meta name="color-scheme" content="light"><title>Daily Fuel Diary</title>
+<style>
+:root{--bg:#f5f7f2;--card:#fff;--ink:#1c2b24;--muted:#65756c;--green:#246b4b;--line:#e1e8e2;--lime:#d8f2a5}*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:16px system-ui,-apple-system,sans-serif}header{background:#173f2d;color:white;padding:22px 18px 18px;border-radius:0 0 24px 24px}header small{opacity:.75}h1{margin:4px 0;font-size:25px}main{max-width:680px;margin:auto;padding:15px 14px 34px}.row{display:flex;gap:9px;align-items:center}.between{justify-content:space-between}.card{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:15px;margin:12px 0;box-shadow:0 3px 12px #1a392008}.muted{color:var(--muted);font-size:13px}.stats{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}.stat{background:#f6faf4;border-radius:13px;padding:12px}.stat b{display:block;font-size:21px}.stat span{font-size:12px;color:var(--muted)}label{font-size:13px;color:var(--muted);display:block;margin-bottom:5px}input,textarea,select{font:inherit;width:100%;padding:12px;border:1px solid #d7e1d9;border-radius:11px;background:white;color:var(--ink);margin-bottom:9px}textarea{min-height:74px;resize:vertical}button{font:600 14px system-ui;border:0;border-radius:11px;padding:12px 14px;background:var(--green);color:white;cursor:pointer}button.secondary{background:#edf4ed;color:var(--green)}button.danger{background:#fff0ed;color:#a43d2e}button.small{padding:7px 9px;font-size:12px}.food{padding:12px 0;border-bottom:1px solid var(--line)}.food:last-child{border-bottom:0}.pill{display:inline-block;background:#edf4ed;border-radius:999px;padding:5px 8px;font-size:12px;color:#315d45}.bar{height:7px;background:#e9eee8;border-radius:9px;overflow:hidden;margin-top:6px}.bar i{display:block;height:100%;background:#74a96b}.tabs{display:flex;gap:6px;overflow:auto;margin:10px 0}.tabs button{white-space:nowrap}.tabs button.active{background:#173f2d}.hidden{display:none!important}.inline{display:flex;gap:8px}.inline>*{flex:1;min-width:0}.foot{font-size:12px;text-align:center;color:var(--muted);padding:18px 8px}
+</style></head><body><header><small>YOUR OFFLINE FOOD JOURNAL</small><h1>Daily Fuel Diary 🌱</h1><div id="dateLabel"></div></header><main>
+<div class="tabs"><button class="active" data-tab="today">Today</button><button class="secondary" data-tab="history">History</button><button class="secondary" data-tab="settings">Settings & backup</button></div>
+<section id="today">
+<div class="card"><div class="row between"><div><div class="muted">TODAY'S ENERGY</div><h2 style="margin:3px 0" id="kcal">0 kcal</h2></div><span class="pill" id="mealCount">0 foods</span></div><div class="stats" style="margin-top:12px"><div class="stat"><span>Protein</span><b id="protein">0 g</b><div class="bar"><i id="proteinBar" style="width:0"></i></div></div><div class="stat"><span>Carbohydrates</span><b id="carbs">0 g</b><div class="bar"><i id="carbsBar" style="width:0"></i></div></div><div class="stat"><span>Fat</span><b id="fat">0 g</b><div class="bar"><i id="fatBar" style="width:0"></i></div></div><div class="stat"><span>Fibre</span><b id="fibre">0 g</b><div class="bar"><i id="fibreBar" style="width:0"></i></div></div></div></div>
+<div class="card"><h3 style="margin-top:0">What did you eat?</h3><p class="muted">Type naturally. Example: “2 rotis, 1 bowl dal and 1 glass milk”. Estimates use an offline food list and typical portions.</p><textarea id="foodText" placeholder="2 rotis, aloo sabzi and 1 glass of milk"></textarea><button id="estimate">Estimate & add foods</button><div id="estimateNote" class="muted" style="margin-top:8px"></div></div>
+<div class="card"><div class="row between"><h3 style="margin:0">Today's log</h3><input id="dayPick" type="date" style="width:auto;margin:0;padding:8px"></div><div id="foodList" class="muted" style="margin-top:8px">No foods logged yet.</div></div>
+</section>
+<section id="history" class="hidden"><div class="card"><h3 style="margin-top:0">Food history</h3><p class="muted">Choose a date to review and edit that day's meals.</p><input type="date" id="historyDate"><div id="historySummary"></div><button class="secondary" id="openSelected">Open this date in Today</button></div></section>
+<section id="settings" class="hidden">
+<div class="card"><h3 style="margin-top:0">Daily reminder</h3><label class="row" style="align-items:center;gap:8px"><input id="reminderOn" type="checkbox" style="width:auto;margin:0"> Remind me every day</label><div class="inline"><div><label for="reminderTime">Reminder time</label><input id="reminderTime" type="time" value="20:00"></div><div style="display:flex;align-items:end"><button id="saveReminder" style="width:100%;margin-bottom:9px">Save reminder</button></div></div><p class="muted">Android may ask for notification or exact-alarm permission. Battery-saving settings can affect delivery.</p></div>
+<div class="card"><h3 style="margin-top:0">Your data belongs to you</h3><p class="muted">Your diary is stored locally on this phone. No account, server, or paid nutrition API is used.</p><button id="export">Export backup</button> <button class="secondary" id="import">Import backup</button><input id="backupFile" type="file" accept=".json,application/json" class="hidden"><p class="muted">Keep a backup if you uninstall the app or change phones.</p></div>
+<div class="card"><h3 style="margin-top:0">About estimates</h3><p class="muted">Nutrition values are approximations, not lab measurements. Oil, recipes, portion size, milk type and brands can change the result. Check and edit each food if you need a closer estimate.</p><button class="danger" id="clearAll">Delete all diary data</button></div>
+</section><div class="foot">Offline-first • No account • Editable estimates</div></main>
+<script>
+const $=id=>document.getElementById(id);
+const DB=[
+{keys:['roti','chapati','phulka'],name:'Roti / chapati',unit:'piece',k:110,p:3.2,c:22,f:1.5,fi:3.0},
+{keys:['paratha','parantha'],name:'Plain paratha',unit:'piece',k:220,p:4.5,c:32,f:8,fi:3},
+{keys:['aloo sabzi','potato curry','potato sabzi','aloo ki sabji','aloo'],name:'Aloo sabzi',unit:'bowl',k:180,p:3.5,c:27,f:7,fi:4},
+{keys:['dal','daal','lentils'],name:'Dal',unit:'bowl',k:180,p:10,c:27,f:4,fi:8},
+{keys:['milk','doodh'],name:'Milk',unit:'glass',k:150,p:8,f:8,c:12,fi:0},
+{keys:['curd','yogurt','dahi'],name:'Curd / dahi',unit:'bowl',k:100,p:5,c:7,f:5,fi:0},
+{keys:['lassi'],name:'Lassi',unit:'glass',k:180,p:6,c:25,f:6,fi:0},
+{keys:['rice','chawal'],name:'Cooked rice',unit:'bowl',k:205,p:4.3,c:45,f:.4,fi:.6},
+{keys:['paneer'],name:'Paneer',unit:'100 g',k:265,p:18,c:4,f:20,fi:0},
+{keys:['besan ladoo','besan laddu','ladoo','laddu'],name:'Besan ladoo',unit:'piece',k:180,p:4,c:20,f:9,fi:2},
+{keys:['banana','kela'],name:'Banana',unit:'piece',k:105,p:1.3,c:27,f:.4,fi:3.1},
+{keys:['apple','seb'],name:'Apple',unit:'piece',k:95,p:.5,c:25,f:.3,fi:4.4},
+{keys:['egg'],name:'Egg',unit:'piece',k:72,p:6.3,c:.4,f:4.8,fi:0},
+{keys:['oats'],name:'Oats',unit:'50 g',k:190,p:6.5,c:32,f:3.5,fi:5},
+{keys:['peanut butter'],name:'Peanut butter',unit:'1 tbsp',k:95,p:4,c:3.5,f:8,fi:1},
+{keys:['peanuts','groundnut','moongphali','mungfali','mumfuli'],name:'Peanuts',unit:'30 g handful',k:170,p:7.5,c:5,f:14,fi:2.5},
+{keys:['makhana','fox nuts'],name:'Roasted makhana',unit:'25 g bowl',k:90,p:3,c:18,f:1,fi:2},
+{keys:['tea','chai'],name:'Milk tea / chai',unit:'cup',k:80,p:2,c:10,f:3,fi:0},
+{keys:['juice','sugarcane juice','ganna ka juice'],name:'Fruit / sugarcane juice',unit:'glass',k:130,p:1,c:31,f:0,fi:.5},
+{keys:['bread'],name:'Bread',unit:'slice',k:75,p:2.5,c:14,f:1,fi:.7},
+{keys:['biscuit'],name:'Biscuit',unit:'piece',k:35,p:.5,c:5,f:1.5,fi:.2},
+{keys:['chicken'],name:'Cooked chicken',unit:'100 g',k:190,p:29,c:0,f:7,fi:0},
+{keys:['poha'],name:'Poha',unit:'bowl',k:250,p:5,c:45,f:6,fi:3},
+{keys:['idli'],name:'Idli',unit:'piece',k:60,p:2,c:12,f:.4,fi:.5},
+{keys:['dosa'],name:'Plain dosa',unit:'piece',k:170,p:4,c:27,f:5,fi:2},
+{keys:['samosa'],name:'Samosa',unit:'piece',k:260,p:5,c:32,f:13,fi:3},
+{keys:['puri','poori'],name:'Puri',unit:'piece',k:100,p:2,c:14,f:4,fi:1},
+{keys:['roasted chana','chana'],name:'Chana',unit:'bowl',k:210,p:11,c:35,f:3,fi:9},
+{keys:['smoothie','banana shake','shake'],name:'Milkshake',unit:'glass',k:260,p:9,c:42,f:7,fi:2}
+];
+const today=()=>new Date().toLocaleDateString('en-CA');
+let selectedDate=today();
+let diary=load();
+function load(){try{return JSON.parse(localStorage.getItem('dailyfuel_diary')||'{}')}catch(e){return {}}}
+function save(){localStorage.setItem('dailyfuel_diary',JSON.stringify(diary))}
+function getItems(d=selectedDate){if(!diary[d])diary[d]=[];return diary[d]}
+function totals(items){return items.reduce((a,x)=>{['k','p','c','f','fi'].forEach(k=>a[k]+=Number(x[k])||0);return a},{k:0,p:0,c:0,f:0,fi:0})}
+function fmt(n){return (Math.round(n*10)/10).toString()}
+function render(){
+$('dateLabel').textContent=new Date(selectedDate+'T12:00:00').toLocaleDateString(undefined,{weekday:'long',month:'short',day:'numeric',year:'numeric'});
+$('dayPick').value=selectedDate; let items=getItems(),t=totals(items);
+$('kcal').textContent=Math.round(t.k)+' kcal';$('protein').textContent=fmt(t.p)+' g';$('carbs').textContent=fmt(t.c)+' g';$('fat').textContent=fmt(t.f)+' g';$('fibre').textContent=fmt(t.fi)+' g';$('mealCount').textContent=items.length+' foods';
+[['proteinBar',t.p,100],['carbsBar',t.c,250],['fatBar',t.f,70],['fibreBar',t.fi,30]].forEach(([id,v,max])=>$(id).style.width=Math.min(100,v/max*100)+'%');
+$('foodList').innerHTML=items.length?'':'No foods logged yet.';
+items.forEach((x,i)=>{let el=document.createElement('div');el.className='food';el.innerHTML=`<div class="row between"><div><b>${esc(x.name)}</b><div class="muted">${esc(x.qty)} • ${Math.round(x.k)} kcal • P ${fmt(x.p)}g · C ${fmt(x.c)}g · F ${fmt(x.f)}g</div></div><div class="row"><button class="secondary small" data-edit="${i}">Edit</button><button class="danger small" data-del="${i}">×</button></div></div>`;$('foodList').appendChild(el)});
+$('foodList').querySelectorAll('[data-del]').forEach(b=>b.onclick=()=>{if(confirm('Delete this food?')){items.splice(+b.dataset.del,1);save();render()}});
+$('foodList').querySelectorAll('[data-edit]').forEach(b=>b.onclick=()=>editItem(+b.dataset.edit));
+renderHistory();
+}
+function esc(s){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+function editItem(i){let x=getItems()[i];let name=prompt('Food name',x.name);if(name===null)return;let qty=prompt('Serving / quantity',x.qty);if(qty===null)return;let k=prompt('Calories (kcal)',x.k);if(k===null)return;let p=prompt('Protein (g)',x.p);if(p===null)return;let c=prompt('Carbs (g)',x.c);if(c===null)return;let f=prompt('Fat (g)',x.f);if(f===null)return;let fi=prompt('Fibre (g)',x.fi);if(fi===null)return;let vals=[k,p,c,f,fi].map(Number);if(vals.some(v=>!Number.isFinite(v)||v<0)){alert('Enter valid non-negative numbers.');return}Object.assign(x,{name,qty,k:vals[0],p:vals[1],c:vals[2],f:vals[3],fi:vals[4]});save();render()}
+function parseFoods(text){
+let chunks=text.toLowerCase().replace(/\band\b/g,',').split(/[,;\n]+/).map(s=>s.trim()).filter(Boolean), found=[], unknown=[];
+chunks.forEach(chunk=>{
+ let match=null;
+ for(let food of DB){let idx=-1,matched='';for(let key of food.keys){idx=chunk.indexOf(key);if(idx>=0){match=food;matched=key;break}}if(match)break}
+ if(!match){unknown.push(chunk);return}
+ let qty=1, m=chunk.match(/(\d+(?:\.\d+)?|half|one|a|an|ek|do|teen|char|paanch|dedh|dhai)\s*/);
+ if(m){let q=m[1];qty=({'half':.5,'one':1,'a':1,'an':1,'ek':1,'do':2,'teen':3,'char':4,'paanch':5,'dedh':1.5,'dhai':2.5}[q]??Number(q));}
+ let unit=match.unit;
+ if(/glass|cup/.test(chunk)&&['Milk','Lassi','Milk tea / chai','Fruit / sugarcane juice','Milkshake'].includes(match.name))unit=match.unit;
+ if(/bowl|katori/.test(chunk)&&['Dal','Aloo sabzi','Curd / dahi','Cooked rice','Chana'].includes(match.name))unit='bowl';
+ found.push({name:match.name,qty:qty+' '+unit,k:match.k*qty,p:match.p*qty,c:match.c*qty,f:match.f*qty,fi:match.fi*qty});
+ });
+ return {found,unknown};
+}
+$('estimate').onclick=()=>{
+ let text=$('foodText').value.trim();if(!text){alert('Type what you ate first.');return}
+ let {found,unknown}=parseFoods(text);
+ if(found.length){getItems().push(...found);save();render();$('foodText').value=''}
+ let note=found.length?`Added ${found.length} recognised item(s). Estimates are approximate.`:'I could not recognise those foods.';
+ if(unknown.length)note+=` Not recognised: ${unknown.join('; ')}. Add recognised items, then use Edit to correct portions/macros.`;
+ $('estimateNote').textContent=note;
+ if(!found.length&&unknown.length)alert('No foods recognised. Try a common name such as roti, dal, milk, rice, paneer, banana, oats or chai.');
+};
+$('dayPick').onchange=()=>{selectedDate=$('dayPick').value||today();render()};
+document.querySelectorAll('[data-tab]').forEach(b=>b.onclick=()=>{document.querySelectorAll('[data-tab]').forEach(x=>{x.classList.toggle('active',x===b);x.classList.toggle('secondary',x!==b)});['today','history','settings'].forEach(id=>$(id).classList.toggle('hidden',id!==b.dataset.tab));if(b.dataset.tab==='history')renderHistory()});
+function renderHistory(){let d=$('historyDate').value||selectedDate;let items=diary[d]||[],t=totals(items);$('historySummary').innerHTML=`<p><b>${Math.round(t.k)} kcal</b> · Protein ${fmt(t.p)} g · Carbs ${fmt(t.c)} g · Fat ${fmt(t.f)} g</p><p class="muted">${items.length} logged foods</p>`}
+$('historyDate').value=selectedDate;$('historyDate').onchange=renderHistory;$('openSelected').onclick=()=>{selectedDate=$('historyDate').value||today();document.querySelector('[data-tab="today"]').click();render()};
+$('reminderOn').checked=localStorage.getItem('dailyfuel_reminder_on')==='true';$('reminderTime').value=localStorage.getItem('dailyfuel_reminder_time')||'20:00';
+$('saveReminder').onclick=()=>{let on=$('reminderOn').checked,tm=$('reminderTime').value||'20:00';localStorage.setItem('dailyfuel_reminder_on',on);localStorage.setItem('dailyfuel_reminder_time',tm);let [h,m]=tm.split(':').map(Number);if(window.AndroidBridge)AndroidBridge.setReminder(h,m,on);alert(on?'Reminder saved. Allow notification/alarm permission if Android asks.':'Daily reminder turned off.')};
+function backupData(){return JSON.stringify({app:'Daily Fuel Diary',version:1,exportedAt:new Date().toISOString(),diary},null,2)}
+$('export').onclick=()=>{let data=backupData();if(window.AndroidBridge)AndroidBridge.exportBackup(data);else{let a=document.createElement('a');a.href=URL.createObjectURL(new Blob([data],{type:'application/json'}));a.download='daily-fuel-backup.json';a.click();URL.revokeObjectURL(a.href)}};
+$('import').onclick=()=>{if(window.AndroidBridge)AndroidBridge.importBackup();else $('backupFile').click()};
+$('backupFile').onchange=async e=>{let f=e.target.files[0];if(!f)return;try{importBackupFromNative(await f.text())}catch(err){alert('Invalid backup file')}};
+window.importBackupFromNative=raw=>{try{let o=typeof raw==='string'?JSON.parse(raw):raw;if(!o.diary||typeof o.diary!=='object')throw Error('format');if(!confirm('Import and replace the current diary? Export a backup first if needed.'))return;diary=o.diary;save();render();alert('Backup imported.')}catch(e){alert('This backup file is not valid for Daily Fuel Diary.')}};
+$('clearAll').onclick=()=>{if(confirm('Permanently delete all diary data from this phone? Export a backup first if you need one.')){diary={};save();render();alert('Diary data deleted.')}};
+render();
+</script></body></html>
